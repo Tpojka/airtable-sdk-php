@@ -12,7 +12,7 @@ use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 /**
- * Class Table.
+ * Class Table
  */
 class Table
 {
@@ -22,7 +22,7 @@ class Table
     public $name = null;
 
     /**
-     * Table constructor.
+     * Table constructor
      *
      * @param string $name
      */
