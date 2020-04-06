@@ -1,1 +1,3 @@
 preset: recommended
+enabled:
+  - phpdoc_annotation_without_dot
