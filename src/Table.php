@@ -39,16 +39,12 @@ class Table
      */
     public function list(Client $connection, string $view = 'Grid view'): ResponseInterface
     {
-        $list = $connection->request(
-            'GET',
-            $this->name.'?maxRecords=3&view='.$view,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$_ENV['API_KEY'],
-                ],
-            ]
-        );
+        $uri = $this->name.'?maxRecords=3&view='.$view;
 
-        return $list;
+        return $connection->request('GET', $uri, [
+            'headers' => [
+                'Authorization' => 'Bearer '.$_ENV['API_KEY'],
+            ],
+        ]);
     }
 }
