@@ -39,29 +39,21 @@ class AirtableClient
      */
     public function __construct(string $baseId, Table $table)
     {
-        $this->client = new Client([
-            'base_uri' => $_ENV['BASE_URL'] . DIRECTORY_SEPARATOR . $_ENV['VERSION'] . DIRECTORY_SEPARATOR . $baseId . DIRECTORY_SEPARATOR
-        ]);
-
         $this->baseId = $baseId;
         $this->table = $table;
-    }
-
-    /**
-     * @return Client|null
-     */
-    function getClient() : Client
-    {
-        $this->client->request(
-            'GET',
-            $this->table->name,
+        $baseUri = implode(
+            '/',
             [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
-                ]
+                $_ENV['BASE_URL'],
+                $_ENV['VERSION'],
+                $this->baseId,
             ]
-        );
+        )
+            . '/';
 
-        return $this->client;
+        $this->client = new Client([
+            'base_uri' => $baseUri
+        ]);
     }
+
 }

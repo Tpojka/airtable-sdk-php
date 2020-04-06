@@ -23,7 +23,7 @@ class Table
     public $name = null;
 
     /**
-     * Table constructor.
+     * Table constructor
      * @param string $name
      */
     public function __construct(string $name)
@@ -38,16 +38,16 @@ class Table
      */
     public function list(Client $connection, string $view = "Grid view") : ResponseInterface
     {
-        $list = $connection->request(
+        $uri = $this->name . '?maxRecords=3&view=' . $view;
+
+        return $connection->request(
             'GET',
-            $this->name . '?maxRecords=3&view=' . $view,
+            $uri,
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
                 ]
             ]
         );
-
-        return $list;
     }
 }
