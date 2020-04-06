@@ -38,11 +38,9 @@ class Table
      */
     public function list(Client $connection, string $view = "Grid view") : ResponseInterface
     {
-        $uri = $this->name . '?maxRecords=3&view=' . $view;
-
         return $connection->request(
             'GET',
-            $uri,
+            $this->name . '?maxRecords=3&view=' . $view,
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
