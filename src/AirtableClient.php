@@ -41,7 +41,7 @@ class AirtableClient
         $this->baseId = $baseId;
         $this->table = $table;
 
-        $baseUri = join('/', [
+        $baseUri = implode('/', [
             $_ENV['BASE_URL'],
             $_ENV['VERSION'],
             $this->baseId,
