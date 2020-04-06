@@ -55,5 +55,4 @@ class AirtableClient
             'base_uri' => $baseUri
         ]);
     }
-
 }
