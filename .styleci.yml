@@ -1,4 +1,5 @@
 preset: recommended
+disabled:
+    - concat_withut_spaces
 enabled:
   - phpdoc_annotation_without_dot
-  - concat_with_spaces
