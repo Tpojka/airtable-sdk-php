@@ -62,7 +62,7 @@ class AirtableClient
             $this->table->name,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer '.$_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
                 ],
             ]
         );
