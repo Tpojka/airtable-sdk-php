@@ -7,7 +7,7 @@ namespace Beachcasts\Airtable;
 use GuzzleHttp\Client;
 
 /**
- * Class AirtableClient
+ * Class AirtableClient.
  */
 class AirtableClient
 {
@@ -19,7 +19,7 @@ class AirtableClient
     protected $baseId = null;
 
     /**
-     * Guzzle client object
+     * Guzzle client object.
      *
      * @var Client|null
      */
