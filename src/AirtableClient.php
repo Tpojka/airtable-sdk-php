@@ -7,20 +7,19 @@ namespace Beachcasts\Airtable;
 use GuzzleHttp\Client;
 
 /**
- * Class AirtableClient
- * @package Beachcasts\Airtable
+ * Class AirtableClient.
  */
 class AirtableClient
 {
     /**
-     * Base identifier
+     * Base identifier.
      *
      * @var null
      */
     protected $baseId = null;
 
     /**
-     * Guzzle client object
+     * Guzzle client object.
      *
      * @var Client|null
      */
@@ -32,15 +31,15 @@ class AirtableClient
     protected $table = null;
 
     /**
-     * Airtable constructor. Create a new Airtable Instance
+     * Airtable constructor. Create a new Airtable Instance.
      *
      * @param string $baseId
-     * @param Table $table
+     * @param Table  $table
      */
     public function __construct(string $baseId, Table $table)
     {
         $this->client = new Client([
-            'base_uri' => $_ENV['BASE_URL'] . DIRECTORY_SEPARATOR . $_ENV['VERSION'] . DIRECTORY_SEPARATOR . $baseId . DIRECTORY_SEPARATOR
+            'base_uri' => $_ENV['BASE_URL'].DIRECTORY_SEPARATOR.$_ENV['VERSION'].DIRECTORY_SEPARATOR.$baseId.DIRECTORY_SEPARATOR,
         ]);
 
         $this->baseId = $baseId;
@@ -50,15 +49,15 @@ class AirtableClient
     /**
      * @return Client|null
      */
-    function getClient() : Client
+    public function getClient(): Client
     {
         $this->client->request(
             'GET',
             $this->table->name,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
-                ]
+                    'Authorization' => 'Bearer '.$_ENV['API_KEY'],
+                ],
             ]
         );
 
