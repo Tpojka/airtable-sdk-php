@@ -3,3 +3,4 @@ disabled:
     - concat_without_spaces
 enabled:
   - phpdoc_annotation_without_dot
+  - concat_with_spaces
