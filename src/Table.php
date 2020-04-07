@@ -18,17 +18,57 @@ use Psr\Http\Message\ResponseInterface;
 class Table
 {
     /**
-     * @var string|null
+     * @var string
      */
-    public $name = null;
+    private $baseId;
+
+    /**
+     * @var string
+     */
+    private $tableName;
+
+    /**
+     * @var Client
+     */
+    private $client;
 
     /**
      * Table constructor.
-     * @param string $name
+     * @param string $baseId
+     * @param string $tableName
      */
-    public function __construct(string $name)
+    public function __construct(string $baseId, string $tableName)
     {
-        $this->name = $name;
+        $this->baseId = $baseId;
+        $this->tableName = $tableName;
+
+        $baseUri = implode('/', [
+            $_ENV['BASE_URL'],
+            $_ENV['VERSION'],
+            $this->baseId,
+        ]);
+
+        $this->client = new Client([
+            'base_uri' => $baseUri
+        ]);
+    }
+
+    /**
+     * @return Client|null
+     */
+    private function getClient(): Client
+    {
+        $this->client->request(
+            'GET',
+            $this->tableName,
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                ]
+            ]
+        );
+
+        return $this->client;
     }
 
     /**
@@ -38,7 +78,9 @@ class Table
      */
     public function list(Client $connection, string $view = "Grid view"): ResponseInterface
     {
-        $list = $connection->request(
+        $client = $this->getClient();
+
+        return $client->request(
             'GET',
             $this->name . '?maxRecords=3&view=' . $view,
             [
@@ -47,7 +89,5 @@ class Table
                 ]
             ]
         );
-
-        return $list;
     }
 }
