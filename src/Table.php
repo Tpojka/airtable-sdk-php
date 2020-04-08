@@ -8,7 +8,6 @@
 
 namespace Beachcasts\Airtable;
 
-use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -17,6 +16,13 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Table
 {
+    /**
+     * Object where base and table identifiers are stored
+     *
+     * @var Instance
+     */
+    private $instance;
+
     /**
      * @var string
      */
@@ -28,61 +34,49 @@ class Table
     private $tableName;
 
     /**
-     * @var Client
+     * @var AirtableClient
      */
-    private $client;
+    private $airtableClient;
 
     /**
      * Table constructor.
-     * @param string $baseId
-     * @param string $tableName
+     * @param Instance $instance
      */
-    public function __construct(string $baseId, string $tableName)
+    public function __construct(Instance $instance)
     {
-        $this->baseId = $baseId;
-        $this->tableName = $tableName;
-
-        $baseUri = implode('/', [
-            $_ENV['BASE_URL'],
-            $_ENV['VERSION'],
-            $this->baseId,
-        ]);
-
-        $this->client = new Client([
-            'base_uri' => $baseUri
-        ]);
+        $this->instance = $instance;
+        $this->baseId = $this->getBaseId();
+        $this->tableName = $this->getTableName();
+        $this->airtableClient = new AirtableClient($instance);
     }
 
     /**
-     * @return Client|null
+     * @return string
      */
-    private function getClient(): Client
+    public function getBaseId()
     {
-        $this->client->request(
-            'GET',
-            $this->tableName,
-            [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
-                ]
-            ]
-        );
-
-        return $this->client;
+        return $this->instance->getBaseId();
     }
 
     /**
-     * @param Client $connection
+     * @return string
+     */
+    private function getTableName()
+    {
+        return $this->instance->getTableName();
+    }
+
+    /**
      * @param string $view
      * @return ResponseInterface
      */
-    public function list(Client $connection, string $view = "Grid view"): ResponseInterface
+    public function list(string $view = "Grid view"): ResponseInterface
     {
-        $client = $this->getClient();
+        $client = $this->airtableClient->getClient();
 
         return $client->request(
             'GET',
-            $this->name . '?maxRecords=3&view=' . $view,
+            $this->tableName . '?maxRecords=3&view=' . $view,
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $_ENV['API_KEY'],

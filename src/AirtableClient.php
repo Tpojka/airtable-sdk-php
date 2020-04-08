@@ -17,34 +17,39 @@ class AirtableClient
      *
      * @var null
      */
-    protected $baseId = null;
+    private $baseId = null;
+
+    /**
+     * @var string
+     */
+    private $tableName;
 
     /**
      * Guzzle client object
      *
      * @var Client|null
      */
-    protected $client = null;
-
-    /**
-     * @var Table|null
-     */
-    protected $table = null;
+    private $client = null;
 
     /**
      * Airtable constructor. Create a new Airtable Instance
      *
-     * @param string $baseId
-     * @param Table $table
+     * @param Instance $instance
      */
-    public function __construct(string $baseId, Table $table)
+    public function __construct(Instance $instance)
     {
-        $this->client = new Client([
-            'base_uri' => $_ENV['BASE_URL'] . DIRECTORY_SEPARATOR . $_ENV['VERSION'] . DIRECTORY_SEPARATOR . $baseId . DIRECTORY_SEPARATOR
+        $this->baseId = $instance->getBaseId();
+        $this->tableName = $instance->getTableName();
+
+        $baseUri = implode('/', [
+            $_ENV['BASE_URL'],
+            $_ENV['VERSION'],
+            $this->baseId,
         ]);
 
-        $this->baseId = $baseId;
-        $this->table = $table;
+        $this->client = new Client([
+            'base_uri' => $baseUri
+        ]);
     }
 
     /**
@@ -54,7 +59,7 @@ class AirtableClient
     {
         $this->client->request(
             'GET',
-            $this->table->name,
+            $this->tableName,
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
