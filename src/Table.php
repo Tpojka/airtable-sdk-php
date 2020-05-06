@@ -6,6 +6,8 @@
  * On: 26/03/2020
  */
 
+declare(strict_types=1);
+
 namespace Beachcasts\Airtable;
 
 use GuzzleHttp\Client;
@@ -20,7 +22,7 @@ class Table
     /**
      * @var string|null
      */
-    protected $name = null;
+    protected $tableName = null;
 
     protected $client;
 
@@ -29,12 +31,12 @@ class Table
     /**
      * Table constructor.
      *
-     * @param string $name
+     * @param string $tableName
      * @param string $viewName
      */
-    public function __construct(string $name, string $viewName = "Grid view")
+    public function __construct(string $tableName, string $viewName = "Grid view")
     {
-        $this->name = $name;
+        $this->tableName = $tableName;
         $this->viewName = $viewName;
     }
 
@@ -51,7 +53,7 @@ class Table
      */
     public function getName()
     {
-        return $this->name;
+        return $this->tableName;
     }
 
     /**
@@ -67,17 +69,24 @@ class Table
      * @param array $params
      * @return ResponseInterface
      */
-    public function list(array $params = []): ResponseInterface
+    public function list(array $params): ResponseInterface
     {
-//        if (!empty($params)) $qsa = http_build_query($params) #as query string append
-        $url = $this->name . '?maxRecords=3&view=' . $this->viewName;
+        $params = [
+            'maxRecords' =>3,
+            'view' => $this->viewName
+        ];
+
+//        if (!empty($params))
+        $queryString = http_build_query($params);
+
+        $url = $this->tableName . '?' . $queryString;
 
         return $this->client->request(
             'GET',
             $url,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . getenv('API_KEY'),
                 ]
             ]
         );
@@ -91,10 +100,10 @@ class Table
     {
         return $this->client->request(
             'POST',
-            $this->name,
+            $this->tableName,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . getenv('API_KEY'),
                     'Content-Type' => 'application/json',
                 ],
                 'body' => $data,
@@ -110,10 +119,10 @@ class Table
     {
         return $this->client->request(
             'GET',
-            $this->name . '/' . $id,
+            $this->tableName . '/' . $id,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . getenv('API_KEY'),
                 ],
             ]
         );
@@ -123,19 +132,20 @@ class Table
      * @param string $data
      * @param string $type accepts PUT to replace or PATCH to update records
      * @return mixed
+     * @throws \Exception
      */
     public function update(string $data, $type = 'PATCH')
     {
         if (!in_array(strtolower($type), ['put', 'patch'])) {
-            throw new \Exception('Invalid method', 405);
+            throw new \Exception('Invalid method type.');
         }
 
         return $this->client->request(
             strtoupper($type),
-            $this->name,
+            $this->tableName,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . getenv('API_KEY'),
                     'Content-Type' => 'application/json',
                 ],
                 'body' => $data,
@@ -151,10 +161,10 @@ class Table
     {
         return $this->client->request(
             'DELETE',
-            $this->name,
+            $this->tableName,
             [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $_ENV['API_KEY'],
+                    'Authorization' => 'Bearer ' . getenv('API_KEY'),
                 ],
                 'query' => ['records[]' => $id],
             ]

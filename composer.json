@@ -1,10 +1,16 @@
 {
     "name": "beachcasts/airtable-sdk-php",
     "type": "library",
-    "description": "SDK in PHP to utilize the Airtable API.",
+    "description": "Flexible PHP SDK for the Airtable API.",
     "keywords": [
+        "php",
+        "sdk",
+        "airtable",
         "beachcasts",
-        "airtable-sdk-php"
+        "airtable-sdk-php",
+        "client",
+        "psr7",
+        "guzzlehttp"
     ],
     "homepage": "https://github.com/beachcasts/airtable-sdk-php",
     "license": "MIT",
@@ -24,6 +30,7 @@
     ],
     "require": {
         "php": "~7.2",
+        "ext-json": "*",
         "guzzlehttp/guzzle": "^6.5",
         "vlucas/phpdotenv": "3.5.x-dev"
     },
